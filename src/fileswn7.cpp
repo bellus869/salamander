@@ -507,10 +507,8 @@ void CFilesWindow::UnpackZIPArchive(CFilesWindow* target, BOOL deleteOp, const c
             if (!IsPluginFSPath(path) &&
                 (path[0] != 0 && path[1] == ':' ||                                             // paths like X:...
                  (path[0] == '/' || path[0] == '\\') && (path[1] == '/' || path[1] == '\\') || // UNC paths
-                 Is(ptDisk) || Is(ptZIPArchive)))
-               // disk+archive relative paths
-            {
-               // this is a disk path (absolute or relative) - convert all / to \\ and remove duplicate \\
+                 Is(ptDisk) || Is(ptZIPArchive)))                                              // disk+archive relative paths
+            {                                                                                  // this is a disk path (absolute or relative) - convert all / to \\ and remove duplicate \\
                 SlashesToBackslashesAndRemoveDups(path);
             }
             //---  adjust the entered path -> convert to absolute, without '.' and '..'
