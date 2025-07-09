@@ -1,5 +1,6 @@
 ﻿// SPDX-FileCopyrightText: 2023 Open Salamander Authors
 // SPDX-License-Identifier: GPL-2.0-or-later
+// CommentsTranslationProject: TRANSLATED
 
 #include "precomp.h"
 
@@ -2612,15 +2613,15 @@ MENU_TEMPLATE_ITEM MsgBoxButtons[] =
                         HANDLES(FindClose(find));
 
                         const char* tgtName = SalPathFindFileName(op.TargetName);
-                        if (StrICmp(tgtName, dataOut.cFileName) == 0 &&                 // pokud nejde jen o shodu DOS-name (tam dojde ke zmene DOS-name a ne k prepisu)
-                            (dataOut.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) == 0) // pokud nejde o adresar (s tim overwrite-older nic nezmuze)
+                        if (StrICmp(tgtName, dataOut.cFileName) == 0 &&                 // if it's not just a DOS-name match (that would change the DOS-name instead of overwriting)
+                            (dataOut.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) == 0) // if it's not a directory (overwrite older cannot handle directories)
                         {
-                            // orizneme casy na sekundy (ruzne FS ukladaji casy s ruznymi prestnostmi, takze dochazelo k "rozdilum" i mezi "shodnymi" casy)
+                            // truncate timestamps to seconds (different FSs store timestamps with different precision, so there were "differences" even between "identical" times)
                             FILETIME roundedInTime;
                             *(unsigned __int64*)&roundedInTime = *(unsigned __int64*)fileLastWriteTime - (*(unsigned __int64*)fileLastWriteTime % 10000000);
                             *(unsigned __int64*)&dataOut.ftLastWriteTime = *(unsigned __int64*)&dataOut.ftLastWriteTime - (*(unsigned __int64*)&dataOut.ftLastWriteTime % 10000000);
 
-                            if (CompareFileTime(&roundedInTime, &dataOut.ftLastWriteTime) <= 0) // zdrojovy soubor neni novejsi nez cilovy soubor - skipneme copy operaci
+                            if (CompareFileTime(&roundedInTime, &dataOut.ftLastWriteTime) <= 0) // source file is not newer than the target one - skip the copy operation
                             {
                                 free(op.SourceName);
                                 free(op.TargetName);
